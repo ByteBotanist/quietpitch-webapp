@@ -1,0 +1,21 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "C#: SummitView_Functions Debug",
+      "type": "dotnet",
+      "request": "launch",
+      "projectPath": "${workspaceFolder}/backend/SummitView_Functions.csproj"
+    },
+    {
+      "name": "Run SummitView Functions",
+      "type": "coreclr",
+      "request": "launch",
+      "program": "func",
+      "args": ["start"],
+      "cwd": "${workspaceFolder}/backend",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen"
+    }
+  ]
+}

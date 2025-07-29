@@ -1,0 +1,10 @@
+{
+  "description": {
+    "language": "dotnet-isolated",
+    "extensions": [ ".dll" ],
+    "defaultExecutablePath": "dotnet",
+    "defaultWorkerPath": "SummitView_Functions.dll",
+    "workerIndexing": "false",
+    "canUsePlaceholder": true
+  }
+}

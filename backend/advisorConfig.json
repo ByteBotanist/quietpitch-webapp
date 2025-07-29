@@ -1,0 +1,9 @@
+{
+    "firmName": "OakBridge Wealth Management",
+    "logoUrl": "https://yourcdn.com/oakbridge-logo.png",
+    "primaryColor": "#1E4D2B",
+    "secondaryColor": "#C2A878",
+    "defaultTickers": ["AAPL", "MSFT", "SPY"],
+    "advisorNote": "Here’s how key positions we’re monitoring have performed recently."
+  }
+  
