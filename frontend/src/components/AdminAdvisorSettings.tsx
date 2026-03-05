@@ -823,9 +823,6 @@ React.useEffect(() => {
   };
 }, []);
 
-  // Simple guard (mock-first): require ?key= to match env (or skip if you prefer)
-  const ok = useMemo(() => sp.get("key") === import.meta.env.VITE_ADMIN_KEY, [sp]);
-
   //normalize fix
   const clamp = (n: number, min: number, max: number) => Math.min(Math.max(Number.isFinite(n as any) ? Number(n) : min, min), max);
 
@@ -1043,16 +1040,13 @@ try {
   };
 
   if (!slug) return <div className="p-6 text-red-600">Missing slug in URL.</div>;
-  if (!ok) return <div className="p-6 text-red-600">Unauthorized (bad key)</div>;
 
 
   //helper that saves to cosmos
   const API_BASE = import.meta.env.VITE_API_BASE ?? "/api";
 
   async function loadFromCosmos(slug: string) {
-  const res = await fetch(`${API_BASE}/private/advisors/${slug}/settings`, {
-    headers: { "x-admin-key": import.meta.env.VITE_ADMIN_KEY ?? "" }
-  });
+    const res = await fetch(`${API_BASE}/private/advisors/${slug}/settings`);
   if (!res.ok) throw new Error(`GET failed (${res.status})`);
   const data = await res.json();
   console.log('[LOAD ← COSMOS]', {
@@ -1069,13 +1063,11 @@ async function saveToCosmos(slug: string, s: Settings) {
     fx: s.fx,
   });
   const base = import.meta.env?.VITE_API_BASE ?? "/api";   // ✅ define base here
-  const key  = import.meta.env?.VITE_ADMIN_KEY ?? "";
   
   const res = await fetch(`${API_BASE}/private/advisors/${slug}/settings`, {
     method: "PUT",
     headers: {
-      "content-type": "application/json",
-      "x-admin-key": import.meta.env.VITE_ADMIN_KEY ?? ""
+      "content-type": "application/json"
     },
     body: JSON.stringify({
       id: `adv-${slug}`,
