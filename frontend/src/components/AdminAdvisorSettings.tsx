@@ -1064,10 +1064,11 @@ async function saveToCosmos(slug: string, s: Settings) {
   });
   const base = "https://quietpitch-funcapp-axfccbhygagpbkdw.eastus-01.azurewebsites.net/api";   // ✅ define base here
   
-  const res = await fetch(`${API_BASE}/private/advisors/${slug}/settings`, {
+  const res = await fetch(`${base}/private/advisors/${slug}/settings`, {
     method: "PUT",
     headers: {
-      "content-type": "application/json"
+      "content-type": "application/json",
+      "x-admin-key": slug
     },
     body: JSON.stringify({
       id: `adv-${slug}`,
