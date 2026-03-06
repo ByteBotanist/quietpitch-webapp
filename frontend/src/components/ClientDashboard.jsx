@@ -1129,9 +1129,49 @@ const [openNoteIds, setOpenNoteIds] = useState(new Set([DEFAULT_ADVISOR_NOTES[0]
   
   //Public page: read overrides
   useEffect(() => {
-    setLoading(true);
-    if (!slug) { setLoading(false); return; }
-  
+  setLoading(true);
+  if (!slug) {
+    setLoading(false);
+    return;
+  }
+
+  const load = async () => {
+    try {
+      const res = await fetch(
+        `https://quietpitch-funcapp-axfccbhygagpbkdw.eastus-01.azurewebsites.net/api/advisors/${slug}/settings`
+      );
+
+      if (res.ok) {
+        const s = await res.json();
+
+        localStorage.setItem(`sv:${slug}:firm`, JSON.stringify(s));
+
+        const adminChart = Array.isArray(s.positions?.chart)
+          ? s.positions.chart
+          : adminDefaults.chart;
+
+        const adminSummary = Array.isArray(s.positions?.summary)
+          ? s.positions.summary
+          : adminDefaults.summary;
+
+        setAdminDefaults({
+          chart: adminChart,
+          summary: adminSummary
+        });
+
+        setFirm(prev => ({
+          ...prev,
+          firmName: s.branding?.firmName ?? prev.firmName,
+          contactEmail: s.contact?.email ?? prev.contactEmail,
+          leadEmail: s.contact?.leadEmail ?? prev.leadEmail,
+          contactPhone: s.contact?.phone ?? prev.contactPhone
+        }));
+
+        setLoading(false);
+        return;
+      }
+    } catch {}
+
     const raw = localStorage.getItem(`sv:${slug}:firm`);
     if (raw) {
       try {
@@ -1220,6 +1260,9 @@ const [openNoteIds, setOpenNoteIds] = useState(new Set([DEFAULT_ADVISOR_NOTES[0]
     }
   
     setLoading(false);
+    };
+
+    load();
   }, [slug]);
 
   // If admin defaults arrive later AND user has no saved lists yet, seed them once.
