@@ -1043,7 +1043,7 @@ try {
 
 
   //helper that saves to cosmos
-  const API_BASE = import.meta.env.VITE_API_BASE ?? "/api";
+  const API_BASE = "https://quietpitch-funcapp-axfccbhygagpbkdw.eastus-01.azurewebsites.net/api";;
 
   async function loadFromCosmos(slug: string) {
     const res = await fetch(`${API_BASE}/private/advisors/${slug}/settings`);
@@ -1062,7 +1062,7 @@ async function saveToCosmos(slug: string, s: Settings) {
     currency: s.currency,
     fx: s.fx,
   });
-  const base = import.meta.env?.VITE_API_BASE ?? "/api";   // ✅ define base here
+  const base = "https://quietpitch-funcapp-axfccbhygagpbkdw.eastus-01.azurewebsites.net/api";   // ✅ define base here
   
   const res = await fetch(`${API_BASE}/private/advisors/${slug}/settings`, {
     method: "PUT",
