@@ -1640,7 +1640,7 @@ useEffect(() => {
               cached: !!raw0,
             });
 
-            if (!raw0 || !raw0.length) {
+            if (!raw0) {
               raw0 = await fetchStooqChart(sym, { full: true });
               console.log('[STOOQ_FULL] fetched', {
                 sym,
@@ -1658,7 +1658,7 @@ useEffect(() => {
               refPoints: equityFullRef.current[sym]?.length,
             });
 
-            if (!raw0 || !raw0.length) {
+            if (!raw0) {
               raw0 = await fetchStooqChart(sym);
               setCached(key, raw0);
             }
