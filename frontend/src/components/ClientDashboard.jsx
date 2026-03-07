@@ -1617,11 +1617,12 @@ useEffect(() => {
 
 // STOOQ price series for normal tickers (AAPL, MSFT, SPY, etc.)
 useEffect(() => {
+  console.log("chartSymbols entering STOOQ effect", chartSymbols);
   let cancelled = false;
 
   const ids = Array.from(new Set(chartSymbols))
     .filter(sym => !sym.startsWith("US") && !sym.startsWith("PM:"));
-
+    console.log("ids after filter", ids);
   if (!ids.length) return;
 
   setChartLoading(true);
@@ -1639,7 +1640,7 @@ useEffect(() => {
               cached: !!raw0,
             });
 
-            if (!raw0) {
+            if (!raw0 || !raw0.length) {
               raw0 = await fetchStooqChart(sym, { full: true });
               console.log('[STOOQ_FULL] fetched', {
                 sym,
@@ -1657,7 +1658,7 @@ useEffect(() => {
               refPoints: equityFullRef.current[sym]?.length,
             });
 
-            if (!raw0) {
+            if (!raw0 || !raw0.length) {
               raw0 = await fetchStooqChart(sym);
               setCached(key, raw0);
             }
@@ -1685,7 +1686,7 @@ if (!rows.length && raw.length) {
   const approxPoints = Math.min(raw.length, days);
   rows = raw.slice(-approxPoints);
 }
-
+console.log("rows returned", sym, rows.length);
 return [sym, rows];
 
           } catch (err) {
