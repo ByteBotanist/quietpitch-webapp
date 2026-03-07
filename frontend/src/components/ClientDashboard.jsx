@@ -1127,13 +1127,83 @@ const [advisorNotes, setAdvisorNotes] = useState(DEFAULT_ADVISOR_NOTES);
 // Open the first tab by default
 const [openNoteIds, setOpenNoteIds] = useState(new Set([DEFAULT_ADVISOR_NOTES[0].id]));
   
-  //Public page: read overrides
-  useEffect(() => {
+//apply changes to public dashboard
+useEffect(() => {
   setLoading(true);
+
   if (!slug) {
     setLoading(false);
     return;
   }
+
+  const applySettings = (s) => {
+    const adminChart = Array.isArray(s.positions?.chart)
+      ? s.positions.chart
+      : adminDefaults.chart;
+
+    const adminSummary = Array.isArray(s.positions?.summary)
+      ? s.positions.summary
+      : adminDefaults.summary;
+
+    setAdminDefaults({
+      chart: adminChart,
+      summary: adminSummary
+    });
+
+    setFirm(prev => ({
+      ...prev,
+      firmName: s.branding?.firmName ?? prev.firmName,
+      contactEmail: s.contact?.email ?? prev.contactEmail,
+      leadEmail: s.contact?.leadEmail ?? prev.leadEmail,
+      contactPhone: s.contact?.phone ?? prev.contactPhone,
+
+      disclosure: {
+        regulatoryStatus: s.disclosure?.regulatoryStatus ?? '',
+        dataSourceDisclosure: s.disclosure?.dataSourceDisclosure ?? '',
+        customDisclaimer: s.disclosure?.customDisclaimer ?? '',
+      },
+
+      logoUrl: s.branding?.logoUrl ?? prev.logoUrl,
+      logoDataUrl: s.branding?.logoDataUrl ?? prev.logoDataUrl,
+      logoPlacement: s.branding?.logoPlacement ?? prev.logoPlacement,
+      logoSizeHeader: s.branding?.logoSizeHeader ?? prev.logoSizeHeader,
+      logoSizeFooter: s.branding?.logoSizeFooter ?? prev.logoSizeFooter,
+
+      plan: s.plan ?? prev.plan,
+      currency: typeof s.currency === 'string' ? s.currency : prev.currency,
+      timeZone: s.timeZone ?? prev.timeZone,
+
+      address: s.contact?.address ?? prev.address,
+      address1: s.contact?.address1 ?? prev.address1,
+      address2: s.contact?.address2 ?? prev.address2,
+      city: s.contact?.city ?? prev.city,
+      state: s.contact?.state ?? prev.state,
+      zip: s.contact?.zip ?? prev.zip,
+      website: s.contact?.website ?? prev.website,
+      websiteLabel: s.contact?.websiteLabel ?? prev.websiteLabel,
+      twitter: s.contact?.twitter ?? prev.twitter,
+      linkedin: s.contact?.linkedin ?? prev.linkedin,
+      facebook: s.contact?.facebook ?? prev.facebook,
+    }));
+
+    if (s.branding) {
+      document.documentElement.style.setProperty("--brand-primary", s.branding.primary || "#2563eb");
+      document.documentElement.style.setProperty("--brand-secondary", s.branding.secondary || "#16a34a");
+    }
+
+    const p = s.branding?.primary || "#2563eb";
+    const q = s.branding?.secondary || "#16a34a";
+
+    document.documentElement.style.setProperty("--brand-on-primary", pickOn(p));
+    document.documentElement.style.setProperty("--brand-on-secondary", pickOn(q));
+
+    document.documentElement.setAttribute(
+      "data-theme",
+      s.branding?.theme === "dark" ? "dark" : "light"
+    );
+
+    if (Array.isArray(s.notes)) setAdvisorNotes(s.notes);
+  };
 
   const load = async () => {
     try {
@@ -1143,30 +1213,8 @@ const [openNoteIds, setOpenNoteIds] = useState(new Set([DEFAULT_ADVISOR_NOTES[0]
 
       if (res.ok) {
         const s = await res.json();
-
         localStorage.setItem(`sv:${slug}:firm`, JSON.stringify(s));
-
-        const adminChart = Array.isArray(s.positions?.chart)
-          ? s.positions.chart
-          : adminDefaults.chart;
-
-        const adminSummary = Array.isArray(s.positions?.summary)
-          ? s.positions.summary
-          : adminDefaults.summary;
-
-        setAdminDefaults({
-          chart: adminChart,
-          summary: adminSummary
-        });
-
-        setFirm(prev => ({
-          ...prev,
-          firmName: s.branding?.firmName ?? prev.firmName,
-          contactEmail: s.contact?.email ?? prev.contactEmail,
-          leadEmail: s.contact?.leadEmail ?? prev.leadEmail,
-          contactPhone: s.contact?.phone ?? prev.contactPhone
-        }));
-
+        applySettings(s);
         setLoading(false);
         return;
       }
@@ -1176,94 +1224,15 @@ const [openNoteIds, setOpenNoteIds] = useState(new Set([DEFAULT_ADVISOR_NOTES[0]
     if (raw) {
       try {
         const s = JSON.parse(raw);
-        const adminChart   = Array.isArray(s.positions?.chart)   ? s.positions.chart   : adminDefaults.chart;
-        const adminSummary = Array.isArray(s.positions?.summary) ? s.positions.summary : adminDefaults.summary;
-        // cache admin defaults for Clear/Reset buttons
-        setAdminDefaults({ chart: adminChart, summary: adminSummary });
-        try {
-          localStorage.setItem('adminChartDefaults',   JSON.stringify(adminChart));
-          localStorage.setItem('adminSummaryDefaults', JSON.stringify(adminSummary));
-        } catch {}
-
-        if (s.private) {
-          try {
-            localStorage.setItem(PREF_KEY(slug,'pmItems'),  JSON.stringify(s.private.items || []));
-            localStorage.setItem(PREF_KEY(slug,'pmSeries'), JSON.stringify(s.private.series || {}));
-            localStorage.setItem(PREF_KEY(slug,'pmVersion'), String(s.private.version || 0));
-            setPmCacheVersion(Number(s.private.version || 0));
-          } catch (e) {}
-        } else {
-          try {
-            localStorage.removeItem(PREF_KEY(slug,'pmItems'));
-            localStorage.removeItem(PREF_KEY(slug,'pmSeries'));
-            localStorage.removeItem(PREF_KEY(slug,'pmVersion'));
-            setPmCacheVersion(0);
-          } catch (e) {}
-        }
-
-        // Branding + colors
-        setFirm(prev => ({
-          firmName:     s.branding?.firmName ?? prev.firmName,
-          contactEmail: s.contact?.email ?? prev.contactEmail,
-          leadEmail:    s.contact?.leadEmail ?? prev.leadEmail,
-          contactPhone: s.contact?.phone ?? prev.contactPhone,
-          disclosure: {
-            regulatoryStatus: s.disclosure?.regulatoryStatus ?? '',
-            dataSourceDisclosure: s.disclosure?.dataSourceDisclosure ?? '',
-            customDisclaimer: s.disclosure?.customDisclaimer ?? '',
-          },
-
-          // NEW: logo fields
-          logoUrl:        s.branding?.logoUrl ?? prev.logoUrl,
-          logoDataUrl:    s.branding?.logoDataUrl ?? prev.logoDataUrl,
-          logoPlacement:  s.branding?.logoPlacement ?? prev.logoPlacement,
-          logoSizeHeader: s.branding?.logoSizeHeader ?? prev.logoSizeHeader,
-          logoSizeFooter: s.branding?.logoSizeFooter ?? prev.logoSizeFooter,
-
-          // Pricing plan tier, currency and timezone
-          plan:         s.plan ?? prev.plan,
-          currency:     typeof s.currency === 'string' ? s.currency : prev.currency,
-          timeZone:     s.timeZone ?? prev.timeZone,
-
-          // Optional: add address/website/social to firm if you show them here
-          address:      s.contact?.address ?? prev.address,
-          address1:     s.contact?.address1 ?? prev.address1,
-          address2:     s.contact?.address2 ?? prev.address2,
-          city:         s.contact?.city ?? prev.city,
-          state:        s.contact?.state ?? prev.state,
-          zip:          s.contact?.zip ?? prev.zip,
-          website:      s.contact?.website ?? prev.website,
-          websiteLabel: s.contact?.websiteLabel ?? prev.websiteLabel,
-          twitter:      s.contact?.twitter ?? prev.twitter,
-          linkedin:     s.contact?.linkedin ?? prev.linkedin,
-          facebook:     s.contact?.facebook ?? prev.facebook,
-        }));
-  
-        if (s.branding) {
-          document.documentElement.style.setProperty("--brand-primary",  s.branding.primary  || "#2563eb");
-          document.documentElement.style.setProperty("--brand-secondary", s.branding.secondary || "#16a34a");
-        }
-        // Ensure readable text on brand backgrounds
-        const p = s.branding?.primary  || "#2563eb";
-        const q = s.branding?.secondary|| "#16a34a";
-        document.documentElement.style.setProperty("--brand-on-primary",  pickOn(p));
-        document.documentElement.style.setProperty("--brand-on-secondary", pickOn(q));
-
-        // Apply advisor's saved theme (branding.theme), fallback to light
-        const theme = s.branding?.theme === 'dark' ? 'dark' : 'light';
-        document.documentElement.setAttribute('data-theme', theme);
-
-
-        // Notes
-        if (Array.isArray(s.notes)) setAdvisorNotes(s.notes);
+        applySettings(s);
       } catch {}
     }
-  
-    setLoading(false);
-    };
 
-    load();
-  }, [slug]);
+    setLoading(false);
+  };
+
+  load();
+}, [slug]);
 
   // If admin defaults arrive later AND user has no saved lists yet, seed them once.
 useEffect(() => {
