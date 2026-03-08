@@ -1,7 +1,7 @@
 // src/api/stooq.js
 
 export async function fetchStooqChart(symbol) {
-  const base = import.meta.env?.VITE_API_BASE ?? "/api";
+  const base = "https://quietpitch-funcapp-axfccbhygagpbkdw.eastus-01.azurewebsites.net/api";
   const url = `${base}/stooq-chart/${symbol}`;
 
   const res = await fetch(url);

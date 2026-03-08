@@ -1671,7 +1671,7 @@ const raw = (raw0 || [])
   .sort((a, b) => a[0] - b[0]);
 
 // IMPORTANT: anchor window to last datapoint, not "now"
-const end = raw;
+const end = raw.length ? raw[raw.length - 1][0] : Date.now();
 const days = DAYS_BY[timeframe] ?? 366;
 
 let rows = clampToWindow(raw, days, end);
