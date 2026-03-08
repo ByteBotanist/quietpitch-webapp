@@ -316,6 +316,10 @@ function PrivateSeriesEditor(props: {
     setManualRows((props.rows ?? []).slice().sort((a, b) => a[0] - b[0]));
   }, [props.itemId]);
 
+  useEffect(() => {
+    document.title = "Quiet Pitch";
+  }, []);
+
   return (
     <div className="border rounded p-3 space-y-3">
       <div className="flex gap-2">
