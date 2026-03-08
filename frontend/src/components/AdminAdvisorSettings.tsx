@@ -129,7 +129,7 @@ type PrivateData = {
 /** ---------- Defaults ---------- */
 const DEFAULT_SETTINGS: Settings = {
   branding: {
-    firmName: "Quiet Pitch",
+    firmName: "",
     primary: "#2563eb",
     secondary: "#16a34a",
     logoUrl: null,
@@ -143,14 +143,9 @@ const DEFAULT_SETTINGS: Settings = {
     chart: ["AAPL", "MSFT", "SPY"],
     summary: ["AAPL", "MSFT", "SPY"],
   },
-  notes: [
-    { id: "n1", title: "Talking Points", content: "Market remains range-bound; watch CPI next week." },
-    { id: "n2", title: "Positioning", content: "Overweight large-cap tech; trimming small caps." },
-    { id: "n3", title: "What You Can Expect", content: "Onboarding steps, cadence, deliverables." },
-    { id: "n4", title: "FAQs", content: "Fees, custody, account types, how to transfer." }
-  ],
+  notes: [],
   contact: {
-    email: "info@quietpitch.com",
+    email: "",
     leadEmail: "",
     phone: "",
     address: "",

@@ -1330,6 +1330,13 @@ const toggleNoteOpen = (id) => {
 
 const ustFullRef = useRef({ US2Y: [], US10Y: [], US30Y: [] });
 
+// custom tab name for webapp
+useEffect(() => {
+  document.title = firm?.firmName
+    ? `${firm.firmName} | Quiet Pitch`
+    : "Quiet Pitch";
+}, [firm?.firmName]);
+
 // --- Load Equity Price History ---
 useEffect(() => {
   if (!summarySymbols?.length && !chartSymbols?.length) return;
