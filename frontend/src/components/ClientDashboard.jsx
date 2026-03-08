@@ -3014,7 +3014,6 @@ return (
             )}
 
             <div ref={chartContainerRef}>
-              console.log("serieForChart", serieForChart);
               <SummitChart
                 ref={chartRef}
                 chartType={chartType}
