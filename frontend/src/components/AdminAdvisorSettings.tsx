@@ -316,10 +316,6 @@ function PrivateSeriesEditor(props: {
     setManualRows((props.rows ?? []).slice().sort((a, b) => a[0] - b[0]));
   }, [props.itemId]);
 
-  useEffect(() => {
-    document.title = "Quiet Pitch";
-  }, []);
-
   return (
     <div className="border rounded p-3 space-y-3">
       <div className="flex gap-2">
@@ -761,6 +757,11 @@ const canUnlink = inLink;
 export default function AdminAdvisorSettings() {
   const { slug } = useParams();
   const [sp] = useSearchParams();
+
+  useEffect(() => {
+    document.title = "Quiet Pitch";
+  }, []);
+  
   const [data, setData] = useState<Settings>(DEFAULT_SETTINGS);
   const [savedMsg, setSavedMsg] = useState<string>("");
   const [error, setError] = useState<string>("");
