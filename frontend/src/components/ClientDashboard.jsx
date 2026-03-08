@@ -1542,6 +1542,7 @@ useEffect(() => {
         .map(s => [s, all[s]])
         .filter(([, v]) => Array.isArray(v));
 
+      console.log("STOOQ ENTRIES", entries);
       setSeriesMap(prev => ({
         ...prev,
         ...Object.fromEntries(entries),
@@ -1670,7 +1671,7 @@ const raw = (raw0 || [])
   .sort((a, b) => a[0] - b[0]);
 
 // IMPORTANT: anchor window to last datapoint, not "now"
-const end = raw.length ? raw[raw.length - 1][0] : Date.now();
+const end = raw;
 const days = DAYS_BY[timeframe] ?? 366;
 
 let rows = clampToWindow(raw, days, end);
@@ -3013,6 +3014,7 @@ return (
             )}
 
             <div ref={chartContainerRef}>
+              console.log("serieForChart", serieForChart);
               <SummitChart
                 ref={chartRef}
                 chartType={chartType}
