@@ -757,11 +757,6 @@ const canUnlink = inLink;
 export default function AdminAdvisorSettings() {
   const { slug } = useParams();
   const [sp] = useSearchParams();
-
-  useEffect(() => {
-    document.title = "Quiet Pitch";
-  }, []);
-  
   const [data, setData] = useState<Settings>(DEFAULT_SETTINGS);
   const [savedMsg, setSavedMsg] = useState<string>("");
   const [error, setError] = useState<string>("");
@@ -798,6 +793,10 @@ export default function AdminAdvisorSettings() {
       currency: data.currency,
     });
   }, [data.currency]);
+  
+  useEffect(() => {
+    document.title = "Quiet Pitch";
+  }, []);
 
   // put this inside AdminAdvisorSettings(), near other helpers
 const updatePrivateItem = (id: string, patch: Partial<PrivateItem>) => {
