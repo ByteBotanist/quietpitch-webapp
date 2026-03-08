@@ -1330,12 +1330,26 @@ const toggleNoteOpen = (id) => {
 
 const ustFullRef = useRef({ US2Y: [], US10Y: [], US30Y: [] });
 
-// custom tab name for webapp
+// custom tab title name for webapp
 useEffect(() => {
   document.title = firm?.firmName
     ? `${firm.firmName} | Quiet Pitch`
     : "Quiet Pitch";
 }, [firm?.firmName]);
+
+// custom tab title for webapp
+useEffect(() => {
+  const favicon = document.querySelector("link[rel='icon']");
+
+  const logo =
+    firm?.logoDataUrl ||
+    firm?.logoUrl ||
+    "/QuietPitch-AltLogo.png";
+
+  if (favicon) {
+    favicon.href = logo;
+  }
+}, [firm?.logoDataUrl, firm?.logoUrl]);
 
 // --- Load Equity Price History ---
 useEffect(() => {
