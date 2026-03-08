@@ -271,9 +271,19 @@ function AddPrivateInstrument(props: { onAdd: (item: PrivateItem) => void }) {
           className="btn"
           onClick={() => {
             if (!id.trim() || !name.trim()) return;
-            props.onAdd({ id: id.trim(), name: name.trim(), unit, freq, sector: sector.trim() || undefined });
-            setName(''); setId(''); setUnit('price'); setFreq('monthly');
-          }}
+            const cleanId = id.trim().startsWith("PM:")
+              ? id.trim()
+              : `PM:${id.trim()}`;
+
+            props.onAdd({
+              id: cleanId,
+              name: name.trim(),
+              unit,
+              freq,
+              sector: sector.trim() || undefined
+            });
+              setName(''); setId(''); setUnit('price'); setFreq('monthly');
+            }}
         >
           Add
         </button>
