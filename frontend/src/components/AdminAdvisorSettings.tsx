@@ -1055,7 +1055,11 @@ try {
   const API_BASE = "https://quietpitch-funcapp-axfccbhygagpbkdw.eastus-01.azurewebsites.net/api";;
 
   async function loadFromCosmos(slug: string) {
-    const res = await fetch(`${API_BASE}/private/advisors/${slug}/settings`);
+    const res = await fetch(`${API_BASE}/private/advisors/${slug}/settings`, {
+      headers: {
+        "x-admin-key": slug,
+      },
+    });
   if (!res.ok) throw new Error(`GET failed (${res.status})`);
   const data = await res.json();
   console.log('[LOAD ← COSMOS]', {
