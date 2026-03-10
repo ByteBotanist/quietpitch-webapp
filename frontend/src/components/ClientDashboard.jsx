@@ -1152,7 +1152,7 @@ useEffect(() => {
 
     setFirm(prev => ({
       ...prev,
-      firmName: s.branding?.firmName ?? prev.firmName,
+      firmName: s.branding?.firmName || "",
       contactEmail: s.contact?.email ?? prev.contactEmail,
       leadEmail: s.contact?.leadEmail ?? prev.leadEmail,
       contactPhone: s.contact?.phone ?? prev.contactPhone,
