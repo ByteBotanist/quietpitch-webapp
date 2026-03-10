@@ -28,6 +28,13 @@ const SummitChart = forwardRef((props, ref) => {
   const safeSymbols = Array.isArray(symbols) ? symbols : [];
   const safeAmount  = Number(whatIfAmount) || 0;
 
+  if (!safeSymbols.length) {
+    return (
+      <div className="text-sm text-slate-400 text-center py-10">
+        Please look up a symbol to begin.
+      </div>
+    );
+  }
 
   const onEvents = {
     legendselectchanged: (params) => {
