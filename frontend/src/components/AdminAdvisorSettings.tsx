@@ -1069,6 +1069,8 @@ try {
   return data;
 }
 
+const safeNotes = Array.isArray(data.notes) ? data.notes : [];
+
 async function saveToCosmos(slug: string, s: Settings) {
   console.log('[SAVE → COSMOS]', {
     slug,
@@ -1491,7 +1493,7 @@ async function saveToCosmos(slug: string, s: Settings) {
         </div>
 
         <div className="space-y-3">
-          {data.notes.map(n => (
+          {safeNotes.map(n => (
             <div key={n.id} className="border rounded p-3">
               <div className="flex gap-2 mb-2">
                 <input
@@ -1516,7 +1518,7 @@ async function saveToCosmos(slug: string, s: Settings) {
               />
             </div>
           ))}
-          {data.notes.length === 0 && (
+          {safeNotes.length === 0 && (
             <div className="text-sm text-gray-500">No notes yet.</div>
           )}
         </div>
