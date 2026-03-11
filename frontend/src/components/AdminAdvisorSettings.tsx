@@ -140,8 +140,8 @@ const DEFAULT_SETTINGS: Settings = {
   },
   private: { version: 1, items: [], series: {} },
   positions: {
-    chart: ["AAPL", "MSFT", "SPY"],
-    summary: ["AAPL", "MSFT", "SPY"],
+    chart: [],
+    summary: [],
   },
   notes: [],
   contact: {
