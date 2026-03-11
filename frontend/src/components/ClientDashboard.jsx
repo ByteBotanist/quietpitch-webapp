@@ -295,7 +295,7 @@ const isValidYMD = (s) => {
 
 // === Firm defaults (mock-first) ===
 const DEFAULT_FIRM = {
-  firmName: 'Oakbridge Wealth Management',
+  firmName: '',
   contactEmail: '',
   leadEmail: '',
   contactPhone: '',
