@@ -884,7 +884,14 @@ useEffect(() => {
   const getAdminChartDefaults   = () => safeParse(localStorage.getItem('adminChartDefaults'),   adminDefaults.chart);
   const getAdminSummaryDefaults = () => safeParse(localStorage.getItem('adminSummaryDefaults'), adminDefaults.summary);
   
-  const [firm, setFirm] = useState(DEFAULT_FIRM);
+  const [firm, setFirm] = useState(() => {
+    try {
+      const cached = localStorage.getItem(`advisorSettings_${slug}`);
+      return cached ? { ...DEFAULT_FIRM, ...JSON.parse(cached) } : DEFAULT_FIRM;
+    } catch {
+      return DEFAULT_FIRM;
+    }
+  });
   
   // 🔴 FX loader (THIS WAS MISSING)
 useEffect(() => {
