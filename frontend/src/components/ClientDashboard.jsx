@@ -769,14 +769,14 @@ useEffect(() => {
 }, [slug, chartType]);
 
 // --- Symbols (per-slug) ---
-const DEFAULT_CHART   = ["US2Y","US10Y","US30Y"]; // or []
+const DEFAULT_CHART   = []; // or []
 const DEFAULT_SUMMARY = [];                       // or ["AAPL","MSFT","SPY"]
 
 const [chartSymbols, setChartSymbols] = useState(() =>
   getSaved(PREF_KEY(slug, 'chartSymbols'), DEFAULT_CHART)
 );
 
-const [adminDefaults, setAdminDefaults] = useState({ chart: ["AAPL","MSFT","SPY"], summary: ["AAPL","MSFT","SPY"] });
+const [adminDefaults, setAdminDefaults] = useState({ chart: [], summary: [] });
 
 // right where you define summarySymbols
 const [summarySymbols, setSummarySymbols] = useState(() => {
@@ -858,11 +858,14 @@ if (adminV > localV) {
 
 // Exposed helper used by your "Reset" button in Summary
 function resetSummarySymbols() {
-  // use the advisor defaults you cached earlier, else fallback
-  const next = getSaved('adminSummaryDefaults', DEFAULT_SUMMARY);
+  const next = adminDefaults.summary || [];
   setSummarySymbols(next);
+
   if (slug) {
-    localStorage.setItem(PREF_KEY(slug, 'summarySymbols'), JSON.stringify(next));
+    localStorage.setItem(
+      PREF_KEY(slug, 'summarySymbols'),
+      JSON.stringify(next)
+    );
   }
 }
 
@@ -912,17 +915,6 @@ useEffect(() => {
   const [leadErr, setLeadErr] = useState("");
   const leadTo = firm.leadEmail || firm.contactEmail;   // prefer leadEmail, fallback to existing email
 
-
-  const hasUST = chartSymbols.some(s => UST_KEYS[s]);
-
-
-
-const DEFAULT_ADVISOR_NOTES = [
-  { id: "n1", title: "Talking Points", content: "Market remains range-bound; watch CPI next week." },
-  { id: "n2", title: "Positioning", content: "Overweight large-cap tech; trimming small caps." },
-  { id: "n3", title: "What You Can Expect", content: "Onboarding steps, cadence, deliverables." },
-  { id: "n4", title: "FAQs", content: "Fees, custody, account types, how to transfer." }
-];
 
   //move socials when no logo
   const hasFooterLogo =
@@ -1122,7 +1114,7 @@ useEffect(() => {
 }, [summarySymbols, seriesUnitsMemo, selectedColumns]);
 
 
-const [advisorNotes, setAdvisorNotes] = useState(DEFAULT_ADVISOR_NOTES);
+const [advisorNotes, setAdvisorNotes] = useState([]);
 
 // Open the first tab by default
 const [openNoteIds, setOpenNoteIds] = useState(new Set([DEFAULT_ADVISOR_NOTES[0].id]));
@@ -1137,22 +1129,30 @@ useEffect(() => {
   }
 
   const applySettings = (s) => {
-    const adminChart = Array.isArray(s.positions?.chart)
-      ? s.positions.chart
-      : adminDefaults.chart;
+    const adminChart = Array.isArray(s.positions?.chart) ? s.positions.chart : [];
+    const adminSummary = Array.isArray(s.positions?.summary) ? s.positions.summary : [];
 
-    const adminSummary = Array.isArray(s.positions?.summary)
-      ? s.positions.summary
-      : adminDefaults.summary;
+    setChartSymbols(adminChart);
+    setSummarySymbols(adminSummary);
 
-    setAdminDefaults({
-      chart: adminChart,
-      summary: adminSummary
-    });
+      setAdminDefaults({
+        chart: adminChart,
+        summary: adminSummary
+      });
+
+    localStorage.setItem(
+      PREF_KEY(slug,'chartSymbols'),
+      JSON.stringify(adminChart)
+    );
+
+    localStorage.setItem(
+      PREF_KEY(slug,'summarySymbols'),
+      JSON.stringify(adminSummary)
+    );
 
     setFirm(prev => ({
       ...prev,
-      firmName: s.branding?.firmName || "",
+      firmName: s.branding?.firmName ?? "",
       contactEmail: s.contact?.email ?? prev.contactEmail,
       leadEmail: s.contact?.leadEmail ?? prev.leadEmail,
       contactPhone: s.contact?.phone ?? prev.contactPhone,
@@ -1202,7 +1202,7 @@ useEffect(() => {
       s.branding?.theme === "dark" ? "dark" : "light"
     );
 
-    if (Array.isArray(s.notes)) setAdvisorNotes(s.notes);
+    if (Array.isArray(s.notes)) setAdvisorNotes(Array.isArray(s.notes) ? s.notes : []);
   };
 
   const load = async () => {
@@ -3143,22 +3143,38 @@ return (
                 className="tab-ghost p-2 rounded flex-1"
               />
               <button
-                onClick={() => {
+                onClick={async () => {
+                  const sym = newSymbol.toUpperCase();
+
+                  try {
+                    const test = await fetchStooqChart(sym);
+
+                  if (!test || !test.length) {
+                    toast.error("Symbol not supported on chart");
+                    return;
+                  }
+
                   if (
-                    newSymbol &&
-                    !chartSymbols.includes(newSymbol) &&
+                    sym &&
+                    !chartSymbols.includes(sym) &&
                     chartSymbols.length < 12
                   ) {
-                    const next = [...chartSymbols, newSymbol];
+                    const next = [...chartSymbols, sym];
                     setChartSymbols(next);
-                    if (slug)
+
+                    if (slug) {
                       localStorage.setItem(
                         PREF_KEY(slug, "chartSymbols"),
                         JSON.stringify(next)
                       );
+                    }
+
                     setNewSymbol("");
                   }
-                }}
+                } catch {
+                  toast.error("Symbol not supported on chart");
+                }
+              }}
                 className="btn btn-secondary"
               >
                 Lookup
