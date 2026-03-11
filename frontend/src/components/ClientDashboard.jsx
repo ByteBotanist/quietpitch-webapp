@@ -1117,7 +1117,7 @@ useEffect(() => {
 const [advisorNotes, setAdvisorNotes] = useState([]);
 
 // Open the first tab by default
-const [openNoteIds, setOpenNoteIds] = useState(new Set([DEFAULT_ADVISOR_NOTES[0].id]));
+const [openNoteIds, setOpenNoteIds] = useState(new Set());
   
 //apply changes to public dashboard
 useEffect(() => {
