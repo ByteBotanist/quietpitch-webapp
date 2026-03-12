@@ -1136,6 +1136,8 @@ useEffect(() => {
   }
 
   const applySettings = (s) => {
+    console.log("PUBLIC SETTINGS PAYLOAD", s);
+
     const adminChart = Array.isArray(s.positions?.chart) ? s.positions.chart : [];
     const adminSummary = Array.isArray(s.positions?.summary) ? s.positions.summary : [];
    
