@@ -886,7 +886,7 @@ useEffect(() => {
   
   const [firm, setFirm] = useState(() => {
     try {
-      const cached = localStorage.getItem(`advisorSettings_${slug}`);
+      const cached = localStorage.getItem(`sv:${slug}:firm`);
       return cached ? { ...DEFAULT_FIRM, ...JSON.parse(cached) } : DEFAULT_FIRM;
     } catch {
       return DEFAULT_FIRM;
@@ -1138,7 +1138,7 @@ useEffect(() => {
   const applySettings = (s) => {
     const adminChart = Array.isArray(s.positions?.chart) ? s.positions.chart : [];
     const adminSummary = Array.isArray(s.positions?.summary) ? s.positions.summary : [];
-    console.log("PUBLIC SETTINGS PAYLOAD", s);
+   
     setChartSymbols(adminChart);
     setSummarySymbols(adminSummary);
 
@@ -1159,7 +1159,7 @@ useEffect(() => {
 
     setFirm(prev => ({
       ...prev,
-      firmName: s.branding?.firmName ?? "",
+      firmName:s.branding?.firmName ?? s.firmName ?? s.contact?.firmName ?? prev.firmName,
       contactEmail: s.contact?.email ?? prev.contactEmail,
       leadEmail: s.contact?.leadEmail ?? prev.leadEmail,
       contactPhone: s.contact?.phone ?? prev.contactPhone,
