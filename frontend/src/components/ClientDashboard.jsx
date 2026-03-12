@@ -1217,7 +1217,7 @@ useEffect(() => {
   const load = async () => {
     try {
       const res = await fetch(
-        `https://quietpitch-funcapp-axfccbhygagpbkdw.eastus-01.azurewebsites.net/api/advisors/${slug}/settings`
+        `https://quietpitch-funcapp-axfccbhygagpbkdw.eastus-01.azurewebsites.net/api/public/advisors/${slug}/settings`
       );
 
       if (res.ok) {
