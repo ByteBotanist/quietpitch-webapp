@@ -886,7 +886,7 @@ useEffect(() => {
   
   const [firm, setFirm] = useState(() => {
     try {
-      const cached = localStorage.getItem(`sv:${slug}:firm`);
+      const cached = localStorage.getItem(`advisorSettings_${slug}`);
       return cached ? { ...DEFAULT_FIRM, ...JSON.parse(cached) } : DEFAULT_FIRM;
     } catch {
       return DEFAULT_FIRM;
@@ -1161,7 +1161,7 @@ useEffect(() => {
 
     setFirm(prev => ({
       ...prev,
-      firmName:s.branding?.firmName ?? s.firmName ?? s.contact?.firmName ?? prev.firmName,
+      firmName: s.branding?.firmName ?? "",
       contactEmail: s.contact?.email ?? prev.contactEmail,
       leadEmail: s.contact?.leadEmail ?? prev.leadEmail,
       contactPhone: s.contact?.phone ?? prev.contactPhone,
