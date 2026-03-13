@@ -324,6 +324,10 @@ const DEFAULT_FIRM = {
   timeZone: 'UTC'
 };
 
+const API_BASE =
+  import.meta.env?.VITE_API_BASE ||
+  "https://quietpitch-funcapp-axfccbhygagpbkdw.eastus-01.azurewebsites.net/api";
+
 // chart time series
 const DAYS_BY = {
   "1D": 7,
@@ -369,8 +373,7 @@ function parseFredDateUTC(dstr) {
 }
 
 async function fetchAllYields(days) {
-  const base = import.meta.env?.VITE_API_BASE ?? "/api";
-  const j = await fetch(`${base}/yields/us?days=${days}`).then(r => r.json());
+  const j = await fetch(`${API_BASE}/yields/us?days=${days}`).then(r => r.json());
 
   const rows = j.history ?? [];
   const endUtc = rows.reduce((max, p) => {
@@ -384,8 +387,6 @@ async function fetchAllYields(days) {
   (j.history ?? []).map(p => [parseFredDateUTC(p.d), p[key]]).filter(([,v]) => v != null),
   days, endUtc
 );  
-
-console.log("🌊 fetchAllYields called with days:", days);
 
 
   return { US2Y: mk("twoYear"), US10Y: mk("tenYear"), US30Y: mk("thirtyYear"), asOf: j.asOf };
@@ -659,12 +660,6 @@ const dbgEquity = (label, sym, obj) => {
     console.groupEnd();
   }
 };
-
-// Base URL for API calls.
-// In dev, "/api" will be proxied to http://localhost:7071 by Vite.
-const API_BASE =
-  import.meta.env?.VITE_API_BASE   // optional override in prod
-  ?? "/api";
 
 export default function ClientDashboard() {
   const { slug } = useParams();                 // 1) get slug first
@@ -4414,7 +4409,6 @@ return (
                 }
                 setLeadErr("");
 
-                const base = import.meta.env?.VITE_API_BASE ?? "/api";
                 const advisor = encodeURIComponent(slug || "demo");
 
                 const country =
@@ -4425,7 +4419,7 @@ return (
                 const state =
                   lead.country === "United States" ? lead.state : undefined;
 
-                const res = await fetch(`${base}/advisors/${advisor}/leads`, {
+                const res = await fetch(`${API_BASE}/advisors/${advisor}/leads`, {
                   method: "POST",
                   headers: { "Content-Type": "application/json" },
                   body: JSON.stringify({
