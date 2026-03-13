@@ -373,7 +373,14 @@ function parseFredDateUTC(dstr) {
 }
 
 async function fetchAllYields(days) {
-  const j = await fetch(`${API_BASE}/yields/us?days=${days}`).then(r => r.json());
+  const res = await fetch(
+    `https://quietpitch-funcapp-axfccbhygagpbkdw.eastus-01.azurewebsites.net/api/yields/us?days=${days}`
+  );
+
+  if (!res.ok) throw new Error(`UST HTTP ${res.status}`);
+
+  const j = await res.json();
+
 
   const rows = j.history ?? [];
   const endUtc = rows.reduce((max, p) => {
