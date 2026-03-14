@@ -1749,14 +1749,26 @@ useEffect(() => {
 }, [onlyUST, timeframe, setTimeframe]);
 
   // Add & remove for Summary
+    // Add & remove for Summary + Chart
   const addSummarySymbol = () => {
-    if (newSymbol && !summarySymbols.includes(newSymbol.toUpperCase())) {
-      setSummarySymbols((prev) => [...prev, newSymbol.toUpperCase()]);
-      setNewSymbol('');
+    if (!newSymbol) return;
+
+    const sym = newSymbol.toUpperCase();
+
+    if (!summarySymbols.includes(sym)) {
+      setSummarySymbols(prev => [...prev, sym]);
     }
+
+    if (!chartSymbols.includes(sym)) {
+      setChartSymbols(prev => [...prev, sym]);
+    }
+
+    setNewSymbol('');
   };
+
   const removeSummarySymbol = (sym) => {
-    setSummarySymbols((prev) => prev.filter((s) => s !== sym));
+    setSummarySymbols(prev => prev.filter(s => s !== sym));
+    setChartSymbols(prev => prev.filter(s => s !== sym));
   };
 
   const emptySummaryRow = (sym) => ({
@@ -1767,6 +1779,7 @@ useEffect(() => {
     low: "",
     change: "",
   });
+
 
 
   const [rawData, setRawData] = useState([]);
@@ -3157,6 +3170,12 @@ return (
                 onClick={async () => {
                   const sym = newSymbol.toUpperCase();
 
+                  // UST symbols skip Stooq validation
+                  if (UST_KEYS[sym]) {
+                    addSummarySymbol();
+                    return;
+                  }
+
                   try {
                     const test = await fetchStooqChart(sym);
 
@@ -3180,7 +3199,7 @@ return (
                       );
                     }
 
-                    setNewSymbol("");
+                    addSummarySymbol();
                   }
                 } catch {
                   toast.error("Symbol not supported on chart");
