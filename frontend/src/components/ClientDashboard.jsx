@@ -4445,7 +4445,7 @@ return (
                 const state =
                   lead.country === "United States" ? lead.state : undefined;
 
-                const res = await fetch(`${API_BASE}/advisors/${advisor}/leads`, {
+                const res = await fetch(`${API_BASE}/advisors/${slug}/leads`, {
                   method: "POST",
                   headers: { "Content-Type": "application/json" },
                   body: JSON.stringify({
