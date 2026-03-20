@@ -3177,31 +3177,33 @@ return (
                   }
 
                   try {
-                    const test = await fetchStooqChart(sym);
+                    const test = await fetchStooqChart(normalizeSymbol(sym));
 
-                  if (!test || !test.length) {
-                    toast.error("Symbol not supported on chart");
-                    return;
-                  }
+                    if (!Array.isArray(test) || test.length === 0) {
+                      toast.error("Symbol not supported on chart");
+                      return;
+                    }
 
-                  if (
-                    sym &&
-                    !chartSymbols.includes(sym) &&
-                    chartSymbols.length < 12
-                  ) {
-                    const next = [...chartSymbols, sym];
-                    setChartSymbols(next);
+                    // success path
+                    if (
+                      sym &&
+                      !chartSymbols.includes(sym) &&
+                      chartSymbols.length < 12
+                    ) {
+                      const next = [...chartSymbols, sym];
+                      setChartSymbols(next);
 
-                    if (slug) {
-                      localStorage.setItem(
+                      if (slug) {
+                        localStorage.setItem(
                         PREF_KEY(slug, "chartSymbols"),
                         JSON.stringify(next)
                       );
                     }
 
-                    addSummarySymbol();
+                    setNewSymbol("");
                   }
-                } catch {
+                } catch (err) {
+                  console.error("Chart fetch failed:", err);
                   toast.error("Symbol not supported on chart");
                 }
               }}
@@ -4445,7 +4447,7 @@ return (
                 const state =
                   lead.country === "United States" ? lead.state : undefined;
 
-                const res = await fetch(`${API_BASE}/advisors/${slug}/leads`, {
+                const res = await fetch(`https://quietpitch-funcapp-axfccbhygagpbkdw.eastus-01.azurewebsites.net/api/advisors/${slug}/leads`, {
                   method: "POST",
                   headers: { "Content-Type": "application/json" },
                   body: JSON.stringify({
