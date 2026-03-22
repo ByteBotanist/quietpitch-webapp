@@ -1729,7 +1729,7 @@ async function saveToCosmos(slug: string, s: Settings) {
     >
       <option value="" disabled>Select...</option>
       <option value="Not registered / Educational content only">Not registered / Educational</option>
-      <option value="Registered Investment Adviser (RIA)">RIA (Registered Investment Adviser)</option>
+      <option value="RIA (Registered Investment Adviser)">RIA (Registered Investment Adviser)</option>
       <option value="Broker-Dealer">Broker-Dealer</option>
       <option value="Dual registrant — Registered Investment Adviser (RIA) and Broker-Dealer">Dual Registration</option>
     </select>
