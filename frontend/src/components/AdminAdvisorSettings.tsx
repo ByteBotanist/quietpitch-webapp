@@ -923,13 +923,24 @@ useEffect(() => {
         ...(cloud ?? {}),
         currency: cloud?.currency ?? DEFAULT_SETTINGS.currency,
 
-        disclosure: {
-          ...(DEFAULT_SETTINGS.disclosure),
-          ...(cloud?.disclosure ?? {}),
-          regulatoryStatus:
-            cloud?.disclosure?.regulatoryStatus ||
-            advisor?.regulatoryStatus ||
+        branding: {
+          ...(DEFAULT_SETTINGS.branding),
+          ...(cloud?.branding ?? {}),
+          firmName:
+            cloud?.branding?.firmName ||
+            advisor?.firmName ||
             "",
+        },
+
+        disclosure: {
+          regulatoryStatus:
+            cloud?.disclosure?.regulatoryStatus ??
+            advisor?.regulatoryStatus ??
+            "",
+          dataSourceDisclosure:
+            cloud?.disclosure?.dataSourceDisclosure ?? "",
+          customDisclaimer:
+            cloud?.disclosure?.customDisclaimer ?? "",
         },
       });
       setData(merged);
