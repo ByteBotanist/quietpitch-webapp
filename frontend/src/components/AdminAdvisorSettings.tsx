@@ -914,11 +914,23 @@ useEffect(() => {
 
     // 2️⃣ Otherwise fetch from Cosmos (cloud)
     try {
-      const cloud = await loadFromCosmos(slug);
+      const [cloud, advisor] = await Promise.all([
+        loadFromCosmos(slug),
+        loadAdvisor(slug)
+      ]);
       const merged = normalize({
         ...(DEFAULT_SETTINGS as Settings),
         ...(cloud ?? {}),
         currency: cloud?.currency ?? DEFAULT_SETTINGS.currency,
+
+        disclosure: {
+          ...(DEFAULT_SETTINGS.disclosure),
+          ...(cloud?.disclosure ?? {}),
+          regulatoryStatus:
+            cloud?.disclosure?.regulatoryStatus ||
+            advisor?.regulatoryStatus ||
+            "",
+        },
       });
       setData(merged);
       setChartCsv((merged.positions?.chart ?? []).join(', '));
@@ -1067,6 +1079,17 @@ try {
     fx: data?.fx,
   });
   return data;
+}
+
+async function loadAdvisor(slug: string) {
+  const res = await fetch(`${API_BASE}/private/advisors/${slug}`, {
+    headers: {
+      "x-admin-key": slug,
+    },
+  });
+
+  if (!res.ok) throw new Error(`Advisor GET failed (${res.status})`);
+  return await res.json();
 }
 
 const safeNotes = Array.isArray(data.notes) ? data.notes : [];
