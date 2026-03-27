@@ -1,0 +1,387 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+
+html, body, #root { height: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);   /* from your light/dark tokens */
+  color: var(--text);
+}
+#root { background: var(--bg); }
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button:hover {
+  border-color: #646cff;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }  
+}
+
+/* TipTap default content area */
+.ProseMirror ul { list-style: disc; padding-left: 1.25rem; }
+.ProseMirror ol { list-style: decimal; padding-left: 1.25rem; }
+.ProseMirror li { margin: 0.25rem 0; }
+.ProseMirror p { margin: 0.25rem 0; }
+
+/* Public page: Advisor Notes */
+.advisor-note-body { line-height: 1.5 !important; }
+
+/* Paragraph spacing */
+.advisor-note-body p { margin: 0.5rem 0 !important; }
+
+/* Preserve blank lines (empty <p> from TipTap) */
+.advisor-note-body p:empty::before { content: "\00a0"; }
+
+/* Lists */
+.advisor-note-body ul { list-style: disc; padding-left: 1.25rem; }
+.advisor-note-body ol { list-style: decimal; padding-left: 1.25rem; }
+.advisor-note-body li { margin: 0.25rem 0; }
+
+/* Emphasis */
+.advisor-note-body em,
+.advisor-note-body i { font-style: italic !important; }
+
+/* Bold (in case a reset weakened it) */
+.advisor-note-body strong,
+.advisor-note-body b { font-weight: 600 !important; }
+
+/* ========= Quiet Pitch Theme ========= */
+:root {
+  /* brand colors (overwritten at runtime) */
+  --brand-primary:  #2563eb;
+  --brand-secondary:#16a34a;
+  --brand-on-primary:#ffffff;
+  --brand-on-secondary:#ffffff;
+
+  /* surface + text for light theme */
+  --bg: #ffffff;
+  --card: #ffffff;
+  --muted: #f6f7f9;
+  --text: #0f172a;         /* slate-900 */
+  --subtle: #475569;       /* slate-600 */
+  --border: #e5e7eb;       /* gray-200 */
+}
+
+/* Dark mode (toggled via data-theme="dark" on <html>) */
+:root[data-theme="dark"] {
+  --bg: #0b1020;
+  --card: #12172a;
+  --muted: #171c30;
+  --text: #eef2ff;
+  --subtle: #cbd5e1;
+  --border: #232a44;
+}
+
+/* Helpers (used by your components) */
+.page-bg        { background: var(--bg); color: var(--text); }
+.card           { background: var(--card); color: var(--text); border:1px solid var(--border); }
+.subtle         { color: var(--subtle); }
+.brand-bg       { background: var(--brand-primary); color: var(--brand-on-primary); }
+.brand-bg-sec   { background: var(--brand-secondary); color: var(--brand-on-secondary); }
+.brand-text     { color: var(--brand-primary); }
+.brand-border   { border-color: var(--brand-primary); }
+
+/* Buttons */
+.btn { display:inline-flex; align-items:center; justify-content:center; gap:.4rem; padding:.5rem .9rem; border-radius:.6rem; border:1px solid var(--border); }
+.btn-primary   { background: var(--brand-primary); color: var(--brand-on-primary); border-color: var(--brand-primary); }
+.btn-primary:hover { opacity:.92; }
+.btn-secondary { background: var(--brand-secondary); color: var(--brand-on-secondary); border-color: var(--brand-secondary); }
+.btn-secondary:hover { opacity:.92; }
+
+/* Tabs look (unselected) */
+.tab-ghost { background: var(--card); color: var(--text); border:1px solid var(--border); }
+
+/* Advisor notes links pick brand color */
+.advisor-note-body a { color: var(--brand-primary); text-decoration: underline; }
+.advisor-note-body a:hover { background: color-mix(in srgb, var(--brand-primary) 12%, var(--bg)); }
+
+/* CTA panel (“Interested in working with…”) */
+.cta {
+  background: var(--brand-primary);
+  color: var(--brand-on-primary);
+  border-radius: 1rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid color-mix(in srgb, var(--brand-primary) 65%, #000);
+}
+.cta h3 { font-weight: 600; margin: 0 0 .25rem; }
+.cta p  { margin: 0 0 .75rem; }
+
+/* Ensure the theme background/text applies everywhere */
+html, body, #root { height: 100%; }
+html, body { background: var(--bg); color: var(--text); }
+
+/* CTA always uses readable foreground on primary */
+.cta, .cta * { color: var(--brand-on-primary) !important; }
+.cta a { text-decoration: underline; }
+
+/* Only color/tone; no padding/radius changes */
+.cta-tint {
+  background: var(--brand-primary);
+  color: var(--brand-on-primary);
+}
+.cta-tint h1,
+.cta-tint h2,
+.cta-tint h3,
+.cta-tint p,
+.cta-tint a { color: var(--brand-on-primary) !important; }
+.cta-tint a { text-decoration: underline; }
+
+/* Force readable text on CTA without changing layout */
+.cta-ink,
+.cta-ink * { color: var(--brand-on-primary) !important; }
+
+/* Only applies the primary background; no padding/radius changes */
+.cta-bg { background: var(--brand-primary) !important; }
+
+.select-theme {
+  background: var(--card);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.select-theme:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand-secondary) 35%, transparent);
+  border-color: var(--brand-secondary);
+}
+
+/* Advisor Notes body matches theme ink & spacing */
+.advisor-note-body {
+  color: var(--ink);
+  padding: 12px 14px 16px;
+}
+
+/* Row base (safeguard if Tailwind classes ever get overridden) */
+.note-row {
+  background: transparent;
+  color: var(--ink);
+}
+
+/* --- Advisor Notes surfaces --- */
+:root {
+  --note-header: var(--muted); /* slightly lifted above page bg */
+  --note-body:   var(--card);  /* same as cards/tables */
+}
+
+:root[data-theme="dark"] {
+  --note-header: #141a2f;      /* a hair brighter than --muted for contrast */
+  --note-body:   var(--card);
+}
+
+/* Row header (the clickable title) */
+.note-header {
+  background: var(--note-header);
+  color: var(--text);
+  border-bottom: 1px solid var(--border);
+}
+.note-header:hover {
+  background: color-mix(in srgb, var(--note-header) 75%, var(--bg));
+}
+.note-title {
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* Body already existed—give it a real surface */
+.advisor-note-body {
+  background: var(--note-body);
+  color: var(--text);
+  padding: 14px 16px 18px;
+  line-height: 1.55;
+}
+
+/* nicer focus ring when header is keyboard-focused */
+.note-header:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand-secondary) 35%, transparent);
+  border-color: var(--brand-secondary);
+}
+
+/* Themed table (borders & base surface) */
+.theme-table {
+  background: var(--card);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.theme-table th,
+.theme-table td {
+  border: 1px solid var(--border);
+}
+
+/* Themed header bar for tables */
+.table-head {
+  background: var(--muted);
+  color: var(--subtle);
+  border-bottom: 1px solid var(--border);
+}
+
+/* -------- Theme tokens (ensure these exist) -------- */
+:root,
+[data-theme="light"] {
+  --ink-strong: #111827;   /* gray-900 on light */
+  --ink-muted:  #6b7280;   /* gray-500 on light */
+  --link-fg:    #2563eb;   /* brand-ish blue on light */
+}
+
+[data-theme="dark"] {
+  --ink-strong: #e5e7eb;   /* gray-200 on dark */
+  --ink-muted:  #9ca3af;   /* gray-400 on dark */
+  --link-fg:    #60a5fa;   /* softer blue on dark */
+}
+
+/* -------- Contact block -------- */
+.contact-list { color: var(--ink-strong); }
+.contact-label { color: var(--ink-muted); font-weight: 600; font-family: ui-serif, Georgia, serif; }
+.contact-value { color: var(--ink-strong); font-weight: 600; }
+
+.contact-link {
+  color: var(--link-fg);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.contact-link:hover { opacity: 0.9; }
+
+/* -------- Social icons -------- */
+.social-icon { color: var(--ink-strong); opacity: 0.9; transition: opacity .15s, color .15s; }
+.social-icon:hover { color: var(--link-fg); opacity: 1; }
+
+/* ---- Lead modal dark-mode legibility ---- */
+.lead-modal .backdrop{
+  /* slightly darker than bg-black/40 so the panel pops on dark */
+  background: rgba(0,0,0,.55);
+}
+
+.lead-modal .panel{
+  background: var(--card);
+  color: var(--text);
+  /* keep your rounding/shadow from JSX; this only handles colors */
+}
+
+/* Inputs inside the modal */
+.lead-modal input,
+.lead-modal select,
+.lead-modal textarea{
+  background: var(--elevated);
+  color: var(--text);
+  border: 1px solid var(--line);
+}
+
+.lead-modal input::placeholder,
+.lead-modal textarea::placeholder{
+  color: var(--subtle);
+  opacity: 1; /* make sure it’s visible on dark */
+}
+
+/* Buttons */
+.lead-modal .btn-cancel{
+  background: var(--muted);
+  color: var(--text);
+}
+
+.lead-modal .btn-primary{
+  background: var(--brand);
+  color: #fff;
+}
+
+/* Admin-only: let body paint the full-bleed background */
+body.qp-admin #root {
+  background: transparent !important;   /* overrides #root { background: var(--bg); } */
+}
+
+/* Admin-only: navy/gray lattice (full page, no gutters) */
+body.qp-admin.qp-mesh {
+  background-color: #111827 !important;
+  background-image:
+    radial-gradient(900px 600px at 50% 28%,
+      rgba(255,255,255,0.06) 0%,
+      rgba(255,255,255,0.015) 55%,
+      rgba(0,0,0,0.25) 100%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cg stroke='%239ca3af' stroke-opacity='0.45' stroke-width='1' fill='none'%3E%3Cpath d='M0 32 L32 0 M32 64 L64 32 M0 32 L32 64 M32 0 L64 32'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: cover, 64px 64px;
+  background-position: center, center;
+  background-repeat: no-repeat, repeat;
+  background-attachment: scroll, scroll;
+}
+
+/* Admin page: let the body grow with content (no more cutoff) */
+body.qp-admin {
+  height: auto !important;     /* override global height:100% */
+  min-height: 100%;            /* still fill at least the viewport */
+}
+
+/* Dark mode date input calendar icon */
+[data-theme="dark"] input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+
+.export-theme {
+  background: #ffffff !important;
+  color: #111111 !important;
+}
+
+.export-theme .recharts-text,
+.export-theme .recharts-legend-item-text {
+  fill: #111111 !important;
+  color: #111111 !important;
+}
+
+.export-theme svg text {
+  fill: #111111 !important;
+}
