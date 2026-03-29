@@ -12,6 +12,9 @@ import DOMPurify from 'dompurify';
 import { fetchFmpSummary } from "../api/fmp";
 import { fetchStooqChart } from "../api/stooq";
 
+function normalizeSymbol(symbol) {
+  return symbol.trim().toLowerCase() + ".us";
+}
 
 // Pick readable text color (black/white) for any hex
 const pickOn = (hex) => {
@@ -668,10 +671,6 @@ const dbgEquity = (label, sym, obj) => {
     console.groupEnd();
   }
 };
-
-function normalizeSymbol(symbol) {
-  return symbol.trim().toLowerCase() + ".us";
-}
 
 export default function ClientDashboard() {
   const { slug } = useParams();                 // 1) get slug first
@@ -3208,10 +3207,7 @@ return (
               />
               <button
                 onClick={async () => {
-                  const sym = newSymbol.trim().toUpperCase();
-                  const stooqSym = sym.toLowerCase() + ".us";
-
-                  const test = await fetchStooqChart(stooqSym);
+                  const sym = newSymbol.toUpperCase();
 
                   // UST symbols skip Stooq validation
                   if (UST_KEYS[sym]) {
