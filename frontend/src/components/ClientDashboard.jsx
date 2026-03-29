@@ -669,6 +669,10 @@ const dbgEquity = (label, sym, obj) => {
   }
 };
 
+function normalizeSymbol(symbol) {
+  return symbol.trim().toLowerCase() + ".us";
+}
+
 export default function ClientDashboard() {
   const { slug } = useParams();                 // 1) get slug first
   // ===== Persistence & UI prefs (drop-in block) =====
@@ -3204,7 +3208,10 @@ return (
               />
               <button
                 onClick={async () => {
-                  const sym = newSymbol.toUpperCase();
+                  const sym = newSymbol.trim().toUpperCase();
+                  const stooqSym = sym.toLowerCase() + ".us";
+
+                  const test = await fetchStooqChart(stooqSym);
 
                   // UST symbols skip Stooq validation
                   if (UST_KEYS[sym]) {
