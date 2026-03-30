@@ -3,7 +3,7 @@ import ClientDashboard from "./components/ClientDashboard";
 import AdminAdvisorSettings from "./components/AdminAdvisorSettings";
 import { Toaster } from "react-hot-toast";
 import "./App.css";
-import ErrorBoundary from "./components/ErrorBoundary";
+import ErrorBoundary from "./components/ErrorBoundary.jsx";
 
 export default function App() {
   return (

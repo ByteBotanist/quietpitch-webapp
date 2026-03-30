@@ -4,7 +4,7 @@ using System.Collections.Concurrent;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 
-namespace ShadowMarket_Functions.Functions
+namespace SummitView.Functions
 {
     public class GetFmpChart
     {
@@ -42,8 +42,8 @@ namespace ShadowMarket_Functions.Functions
                     throw new Exception("Missing FMP_API_KEY");
 
                 var url =
-                    $"https://financialmodelingprep.com/stable/historical-price-full" +
-                    $"?symbol={symbol}&apikey={apiKey}";
+                    $"https://financialmodelingprep.com/stable/historical-price-eod/full" +
+                    $"?symbol={symbol}&from=2021-01-01&apikey={apiKey}";
 
                 var rawJson = await Http.GetStringAsync(url);
 
@@ -74,7 +74,21 @@ namespace ShadowMarket_Functions.Functions
                         DateTime.SpecifyKind(date, DateTimeKind.Utc)
                     ).ToUnixTimeMilliseconds();
 
-                    var close = cProp.GetDouble();
+                    double close;
+
+                    if (cProp.ValueKind == JsonValueKind.Number)
+                    {
+                        close = cProp.GetDouble();
+                    }
+                    else if (cProp.ValueKind == JsonValueKind.String &&
+                            double.TryParse(cProp.GetString(), out var parsed))
+                    {
+                        close = parsed;
+                    }
+                    else
+                    {
+                        continue;
+                    }
 
                     rows.Add(new object[] { ts, close });
                 }
