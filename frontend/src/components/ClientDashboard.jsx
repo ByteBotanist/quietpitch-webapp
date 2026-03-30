@@ -10,11 +10,8 @@ import { useMemo } from 'react';
 import "react-datepicker/dist/react-datepicker.css";
 import DOMPurify from 'dompurify';
 import { fetchFmpSummary } from "../api/fmp";
-import { fetchStooqChart } from "../api/stooq";
+import { fetchFmpChart } from "../api/fmp";
 
-function normalizeSymbol(symbol) {
-  return symbol.trim().toLowerCase() + ".us";
-}
 
 // Pick readable text color (black/white) for any hex
 const pickOn = (hex) => {
@@ -1399,7 +1396,7 @@ useEffect(() => {
 
         if (!full) {
           console.log('[STOOQ_FULL] fetching', sym);
-          full = await fetchStooqChart(sym, { full: true });
+          full = await fetchFmpChart(sym, { full: true });
           setCached(fullKey, full);
         }
 
@@ -1687,7 +1684,7 @@ useEffect(() => {
             });
 
             if (!raw0) {
-              raw0 = await fetchStooqChart(sym, { full: true });
+              raw0 = await fetchFmpChart(sym, { full: true });
               console.log('[STOOQ_FULL] fetched', {
                 sym,
                 points: raw0?.length,
@@ -1705,7 +1702,7 @@ useEffect(() => {
             });
 
             if (!raw0) {
-              raw0 = await fetchStooqChart(sym);
+              raw0 = await fetchFmpChart(sym);
               setCached(key, raw0);
             }
 
@@ -3216,7 +3213,7 @@ return (
                   }
 
                   try {
-                    const test = await fetchStooqChart(normalizeSymbol(sym));
+                    const test = await fetchFmpChart(normalizeSymbol(sym));
 
                     if (!Array.isArray(test) || test.length === 0) {
                       toast.error("Symbol not supported on chart");
