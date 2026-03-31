@@ -11,5 +11,5 @@ export async function fetchFmpChart(symbol) {
   const res = await fetch(`${base}/fmp-chart/${symbol}`);
   if (!res.ok) throw new Error("Failed to load chart");
   const j = await res.json();
-  return j.historical || [];
+  return Array.isArray(j) ? j : [];
 }
