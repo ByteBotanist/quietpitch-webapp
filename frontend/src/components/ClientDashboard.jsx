@@ -84,7 +84,7 @@ const fxKey = (slug, base, plan) => {
 };
 
 const chartCache = new Map();
-// key example: "STOOQ:AAPL:1Y"
+// key example: "FMP:AAPL:1Y"
 
 function cacheKey(provider, symbol, timeframe) {
   return `${provider}:${symbol}:${timeframe}`;
@@ -1391,18 +1391,18 @@ useEffect(() => {
     for (const sym of equitySymbols) {
       try {
         // 1️⃣ FULL history (24h cached)
-        const fullKey = cacheKey('STOOQ_FULL', sym, 'MAX');
+        const fullKey = cacheKey('FMP_FULL', sym, 'MAX');
         let full = getCached(fullKey, 24 * 60 * 60 * 1000);
 
         if (!full) {
-          console.log('[STOOQ_FULL] fetching', sym);
+          console.log('[FMP_FULL] fetching', sym);
           full = await fetchFmpChart(sym, { full: true });
           setCached(fullKey, full);
         }
 
         equityFullRef.current[sym] = full;
 
-        console.log('[STOOQ_FULL] ready', {
+        console.log('[FMP_FULL] ready', {
           sym,
           points: full?.length,
           first: full?.[0],
@@ -1584,7 +1584,7 @@ useEffect(() => {
         .map(s => [s, all[s]])
         .filter(([, v]) => Array.isArray(v));
 
-      console.log("STOOQ ENTRIES", entries);
+      console.log("FMP ENTRIES", entries);
       setSeriesMap(prev => ({
         ...prev,
         ...Object.fromEntries(entries),
@@ -1658,9 +1658,9 @@ useEffect(() => {
 }
 }, [chartSymbols, summarySymbols, pmSeries, pmItems, timeframe, dateMode, singleDate]);
 
-// STOOQ price series for normal tickers (AAPL, MSFT, SPY, etc.)
+// FMP price series for normal tickers (AAPL, MSFT, SPY, etc.)
 useEffect(() => {
-  console.log("chartSymbols entering STOOQ effect", chartSymbols);
+  console.log("chartSymbols entering FMP effect", chartSymbols);
   let cancelled = false;
 
   const ids = Array.from(new Set(chartSymbols))
@@ -1675,17 +1675,17 @@ useEffect(() => {
       const entries = await Promise.all(
         ids.map(async (sym) => {
           try {
-            const key = cacheKey("STOOQ_FULL", sym, "MAX");
+            const key = cacheKey("FMP_FULL", sym, "MAX");
             let raw0 = getCached(key, 24 * 60 * 60 * 1000); // 24h cache
 
-            console.log('[STOOQ_FULL] before fetch', {
+            console.log('[FMP_FULL] before fetch', {
               sym,
               cached: !!raw0,
             });
 
             if (!raw0) {
               raw0 = await fetchFmpChart(sym, { full: true });
-              console.log('[STOOQ_FULL] fetched', {
+              console.log('[FMP_FULL] fetched', {
                 sym,
                 points: raw0?.length,
                 first: raw0?.[0],
@@ -1696,7 +1696,7 @@ useEffect(() => {
 
             equityFullRef.current[sym] = raw0;
 
-            console.log('[STOOQ_FULL] stored in ref', {
+            console.log('[FMP_FULL] stored in ref', {
               sym,
               refPoints: equityFullRef.current[sym]?.length,
             });
@@ -1717,7 +1717,7 @@ const end = raw.length ? raw[raw.length - 1][0] : Date.now();
 const days = DAYS_BY[timeframe] ?? 366;
 
 let rows = clampToWindow(raw, days, end);
-console.log("STOOQ", sym, {
+console.log("FMP", sym, {
   raw: raw.length,
   clamped: rows.length,
   end: new Date(end).toISOString(),
@@ -1733,7 +1733,7 @@ console.log("rows returned", sym, rows.length);
 return [sym, rows];
 
           } catch (err) {
-            console.warn("Stooq failed for", sym, err);
+            console.warn("FMP failed for", sym, err);
             return [sym, []];
           }
         })
@@ -3206,7 +3206,7 @@ return (
                 onClick={async () => {
                   const sym = newSymbol.toUpperCase();
 
-                  // UST symbols skip Stooq validation
+                  // UST symbols skip FMP validation
                   if (UST_KEYS[sym]) {
                     addSummarySymbol();
                     return;
