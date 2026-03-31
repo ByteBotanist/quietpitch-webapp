@@ -3213,7 +3213,7 @@ return (
                   }
 
                   try {
-                    const test = await fetchFmpChart(normalizeSymbol(sym));
+                    const test = await fetchFmpChart(sym);
 
                     if (!Array.isArray(test) || test.length === 0) {
                       toast.error("Symbol not supported on chart");
