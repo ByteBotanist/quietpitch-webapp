@@ -1009,6 +1009,7 @@ const merged: Settings = {
   ...previous,
   ...next,
   currency: next.currency ?? previous.currency, // 🔒 THIS LINE FIXES THE BUG
+  digestCadence: next.digestCadence ?? previous.digestCadence ?? 'daily',
 };
 
 // 3️⃣ Normalize AFTER merge
@@ -1724,7 +1725,7 @@ async function saveToCosmos(slug: string, s: Settings) {
         <input
           type="radio"
           name="digestCadence"
-          checked={data.digestCadence === 'weekly'}
+          checked={(data.digestCadence ?? 'daily') === 'weekly'}
           onChange={() => setData(d => ({ ...d, digestCadence: 'weekly' }))}
         />
         <span className="text-sm leading-snug">Weekly (Mondays 8am)</span>
